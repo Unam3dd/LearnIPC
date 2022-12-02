@@ -64,3 +64,9 @@ so as I said above in the program above the child writes the string above the ch
 
 So in our parent process im going to read on file descriptor 0 which represent a READ in pipe im gonna call read system call to write our data in our buffer
 
+I will now present a pseudo algorithm used by bash on the operator "|" which represents a pipe
+
+Algorithm: to do this the algorithm will always need a MAXIMUM of 2 pipes at runtime
+you have the code of the example which represents a chained list etc. but I will content myself with being much more rough and brief to explain the algorithm
+
+

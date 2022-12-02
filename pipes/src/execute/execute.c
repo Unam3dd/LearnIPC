@@ -44,8 +44,7 @@ int		exec_cmd(cmd_t *cmd)
 		if (cmd->prev)
 			fd_dup(cmd->prev->fds[0], STDIN_FILENO);
 		if (cmd->next) {
-			if (close(cmd->fds[0]) < 0)
-				perror("close");
+			close(cmd->fds[0]);
 			fd_dup(cmd->fds[1], STDOUT_FILENO);
 		}
 		name = get_binary_name(cmd->cmd);
@@ -55,13 +54,8 @@ int		exec_cmd(cmd_t *cmd)
 		cmd_free_all(&head);
 		exit(errno);
 	}
-	if (((cmd->id & 1) && cmd->prev) || (!cmd->next && cmd->prev)) {
-		if (close(cmd->prev->fds[0]) < 0)
-			perror("close");
-	} else if ((!(cmd->id & 1) && cmd->prev) || (!cmd->next && cmd->prev)) {
-		if (close(cmd->prev->fds[0]) < 0)
-			perror("close");
-	}
+	if (cmd->prev || (cmd->id && !cmd->next))
+		close(cmd->prev->fds[0]);
 	if (cmd->next)
 		close(cmd->fds[1]);
 	return (0);
@@ -95,13 +89,10 @@ char	*get_binary_name(char *str)
 {
 	static char	buf[0x100];
 	char		*name = NULL;
-	size_t		len =  0;
 
 	if (!str)
 		return (NULL);
-	len = strlen(str);
-	strncpy(buf, str, len);
-	buf[len] = 0;
+	memcpy(buf, str, strlen(str));
 	name = strtok(buf, " \t");
 	return (name);
 }

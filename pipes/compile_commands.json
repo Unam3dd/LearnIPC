@@ -1,6 +1,6 @@
 [
  {
-  "directory": "/home/sam0verfl0w/LearnIPC/pipes",
+  "directory": "/nfs/homes/stales/LearnIPC/pipes",
   "arguments": [
    "gcc",
    "-Wall",
@@ -16,7 +16,7 @@
   "file": "src/main.c"
  },
  {
-  "directory": "/home/sam0verfl0w/LearnIPC/pipes",
+  "directory": "/nfs/homes/stales/LearnIPC/pipes",
   "arguments": [
    "gcc",
    "-Wall",
@@ -30,5 +30,53 @@
    "obj/command/command.o"
   ],
   "file": "src/command/command.c"
+ },
+ {
+  "directory": "/nfs/homes/stales/LearnIPC/pipes",
+  "arguments": [
+   "gcc",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-Iinc",
+   "-O2",
+   "-c",
+   "src/parsing/parse_command.c",
+   "-o",
+   "obj/parsing/parse_command.o"
+  ],
+  "file": "src/parsing/parse_command.c"
+ },
+ {
+  "directory": "/nfs/homes/stales/LearnIPC/pipes",
+  "arguments": [
+   "gcc",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-Iinc",
+   "-O2",
+   "-c",
+   "src/pipes/pipes_create.c",
+   "-o",
+   "obj/pipes/pipes_create.o"
+  ],
+  "file": "src/pipes/pipes_create.c"
+ },
+ {
+  "directory": "/nfs/homes/stales/LearnIPC/pipes",
+  "arguments": [
+   "gcc",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-Iinc",
+   "-O2",
+   "-c",
+   "src/execute/execute.c",
+   "-o",
+   "obj/execute/execute.o"
+  ],
+  "file": "src/execute/execute.c"
  }
 ]
