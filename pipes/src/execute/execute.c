@@ -54,7 +54,7 @@ int		exec_cmd(cmd_t *cmd)
 		cmd_free_all(&head);
 		exit(errno);
 	}
-	if (cmd->prev || (cmd->id && !cmd->next))
+	if (cmd->prev)
 		close(cmd->prev->fds[0]);
 	if (cmd->next)
 		close(cmd->fds[1]);

@@ -67,6 +67,59 @@ So in our parent process im going to read on file descriptor 0 which represent a
 I will now present a pseudo algorithm used by bash on the operator "|" which represents a pipe
 
 Algorithm: to do this the algorithm will always need a MAXIMUM of 2 pipes at runtime
-you have the code of the example which represents a chained list etc. but I will content myself with being much more rough and brief to explain the algorithm
+you have the code of the example which represents a chained list etc. but I will content myself with being much more rough and brief to explain the algorithm to do this you will need at least two pipes to make the connections if you have more than 1 command he processes will run asynchronously we will wait for all of them at the end and when we have an event they will terminate and we will get a status for more clarity I will wait on the pids of the children but you can very well do a wait -1
 
 
+ALGORITHM:
+==========================================================================
+
+COMMAND LAUNCHER:
+begin
+	static int	fds[2][2]
+	int			i = 0;
+	pid_t		pid = 0;
+
+	while (command)
+		if (command->next)
+			create_pipe(fds[i % 2]); // create pipe with pipe system call
+		pid = fork();
+		exec_command(command, fds, i % 2);
+		command = command->next;
+		i++;
+end
+
+COMMAND EXECUTOR
+exec_cmd:
+begin
+	if (CHILD)
+	{
+		if (command->previous)
+			dup2(fds[i - 1][0], STDIN_FILENO) // Child Connect last pipe entry to current STDIN fd
+			close(fds[i - 1][0]) // Close it, duplicate on STDIN_FILENO
+		if (command->next)
+			close(fds[i][0]) // Child Won't need to read
+			dup2(fds[i][1], STDOUT_FILENO) // Child connect pipe STDOUT to current STDOUT
+			close(fds[i][1]) // Close it, duplicate on STDOUT_FILENO
+		exec(command) // Execute command process
+		print_error_if_exec_fail()
+		exit(1);
+	}
+	if (command->previous)
+		close(fds[i - 1][0]); // Parent must be close previous PIPE file descriptor
+	if (command->next)
+		close(fds[i][1]); // Parent won't need to write
+end
+
+WAIT PROCESS ASYNCHRONE;
+
+begin:
+	for each command
+		wait process with wait system call
+
+==========================================================================
+
+							END ALGORITHM
+
+							By Sam0verflow 2022
+			
+==========================================================================
