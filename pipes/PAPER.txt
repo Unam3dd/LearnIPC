@@ -115,6 +115,7 @@ WAIT PROCESS ASYNCHRONE;
 begin:
 	for each command
 		wait process with wait system call
+end
 
 ==========================================================================
 
