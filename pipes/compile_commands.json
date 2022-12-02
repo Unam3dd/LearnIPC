@@ -1,0 +1,34 @@
+[
+ {
+  "directory": "/home/sam0verfl0w/LearnIPC/pipes",
+  "arguments": [
+   "gcc",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-Iinc",
+   "-O2",
+   "-c",
+   "src/main.c",
+   "-o",
+   "obj/main.o"
+  ],
+  "file": "src/main.c"
+ },
+ {
+  "directory": "/home/sam0verfl0w/LearnIPC/pipes",
+  "arguments": [
+   "gcc",
+   "-Wall",
+   "-Wextra",
+   "-Werror",
+   "-Iinc",
+   "-O2",
+   "-c",
+   "src/command/command.c",
+   "-o",
+   "obj/command/command.o"
+  ],
+  "file": "src/command/command.c"
+ }
+]

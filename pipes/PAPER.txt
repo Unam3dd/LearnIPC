@@ -1,0 +1,66 @@
+[PAPER EXPLAIN BASH PIPE ALGORITHM]
+
+pipes are very frequent in the shell such as bash, zsh and so on
+
+during my training at 42 I didn't find any paper explaining this algorithm, so I'm making this paper for other people so that we can share the information faster
+
+when we talk about pipe we must first understand what it is used for, globally it's very simple a pipe is an array of int representing each of them reading, writing, for example if I create a pipe and I write on the file descriptor [1] of the pipe I will have data on the file descriptor [0], 0 is only for reading and 1 for writing
+
+a pipe is part of the IPC (Inter Process Communication) used by the operating system, which is used to exchange data between two or more processes
+
+for a first example I will make a program that writes a string from a child process to its parent and displays it, this is only an example for the notions I will introduce later in the paper
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+
+int main(void)
+{
+	char	buf[0x10] = {0};
+	size_t	len;
+	int		fds[2];
+	pid_t	pid;
+
+	if (pipe(fds) < 0) {
+		perror("pipe");
+		return (1);
+	}
+
+	pid = fork();
+	
+	if (!pid)
+	{
+		// we don't need to read
+		close(fds[0]);
+
+		write(fds[1], "hello", 5);
+		close(fds[1]);
+		exit(0);
+	}
+	wait(NULL);
+
+	// we don't need to write
+	close(fds[1]);
+
+	len = read(fds[0], buf, sizeof(buf));
+	if (len < 0) {
+		perror("read");
+		return (1);
+	}
+
+	close(fds[0]);
+
+	printf("%s\n", buf);
+	
+	return (0);
+}
+
+it is necessary to keep in mind that for a pipe to work at least 1 file descriptor must be closed the best being that the two extremities of the pipe are closed at the end of the program to avoid the "fd-leaks" even if today the modern systems close them at the end of the program automatically it is always safer to close it manually
+
+so as I said above in the program above the child writes the string above the child writes the string "hello" on the file descriptor 1 of the pipe which represents the writing file descriptor once written it is important to close the file descriptor in the child because as I said above a pipe needs to have a file descriptor closed to receive its content from the other side and we close beforehand the file descriptor 0 in the child because we don't need it and it's safer to close it because of the on the other side and we close the file descriptor 0 in the child because we don't need it and it's safer to close it for cleanliness although the code works in this case for later it's a bad reflex not to close correctly the file descriptor opened by the system call pipe
+
+So in our parent process im going to read on file descriptor 0 which represent a READ in pipe im gonna call read system call to write our data in our buffer
+
